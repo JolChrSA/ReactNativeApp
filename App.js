@@ -5,7 +5,7 @@ import RecepiListComponent from './Component/RecepiListComponent';
 
 export default function App() {
   return (
-    <LoginComponent></LoginComponent>
+    <LoginComponent/>
     );
 }
 

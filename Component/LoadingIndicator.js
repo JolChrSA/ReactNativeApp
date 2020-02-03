@@ -2,6 +2,7 @@ import React,{ Component } from 'react'
 import {View, ActivityIndicator, StyleSheet} from 'react-native'
 
 export default function Loder(props){
+    console.log("Loading ...." + props.isLoading);
     
     if (props.isLoading) {
         return <View style={styles.container}>
@@ -19,7 +20,8 @@ const styles = StyleSheet.create({
         height: '100%',
         zIndex: 1,
         position: 'absolute',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems:'center'
     }
 
 })

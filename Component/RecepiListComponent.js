@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList,RefreshControl,ImageBackground } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList,RefreshControl,ActivityIndicator,ImageBackground } from 'react-native'
 import Loder from './LoadingIndicator'
 
 export default class RecepiListComponent extends Component {
@@ -7,7 +7,7 @@ export default class RecepiListComponent extends Component {
     constructor() {
         super()
         this.state = {
-            isLoading: true,
+            isLoading: false,
             recipeInfoList: [],
             isFetching: false,
         }
@@ -22,13 +22,14 @@ export default class RecepiListComponent extends Component {
      }
 
     getRecepeList = () => {
+        this.setState({isLoading:true})
         console.log('Joliph');
         
         fetch('http://35.160.197.175:3006/api/v1/recipe/cooking-list',
             {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s'
+                    'Authorization': 'Bearer ' + this.props.token
                 }
             }).then((response) => { return response.json() })
             .then((responseJson) => {
@@ -46,9 +47,9 @@ export default class RecepiListComponent extends Component {
             })
     }
 
-    addCardView =  ({ item })  => {
+    addCardView =  ({ item , index})  => {
         return(
-            <View style={[styles.recipeView]}> 
+            <View style={styles.recipeView}> 
                 <ImageBackground source={this.getImageUrl(item.photo)} style={styles.recipeCardImage} imageStyle = {{borderRadius: 8}}>
                      <Text style={styles.recepieMadebyName}> {item.firstName + ' ' + item.lastName}</Text>
                      <Text style={styles.recepieName}>{item.name} </Text>
@@ -69,18 +70,21 @@ export default class RecepiListComponent extends Component {
 
     render() {
         return (
-            
-            <View style={styles.container}>
-                <Loder isLoading={this.state.isLoading} />
-               <SafeAreaView>
-                  <FlatList
+            <View style={{ backgroundColor:'rgba(240, 240, 246, 1)'}}>
+                 <SafeAreaView>
+                 <View style= {styles.receipeNavView}>
+                 <Text style={styles.receipeNavigtionTitle}> Recepi List</Text>
+                </View>    
+                 {this.state.isLoading ? <ActivityIndicator color='black' size='large' style={{ backgroundColor:'rgba(240, 240, 246, 1)', width: '100%', height: '100%' }} /> :
+                <FlatList
                      data={this.state.recipeInfoList}
                      renderItem={this.addCardView}
-                     keyExtractor={item => item.recipeId}
                      onRefresh={() => this.onRefresh()}
-                    refreshing={this.state.isFetching}
-                  />
-              </SafeAreaView>
+                     refreshing={this.state.isFetching}
+                     keyExtractor={(item,index) => index}
+                     key = {(item,index) => index}
+                  />}
+               </SafeAreaView>
             </View>
         );
     }
@@ -89,18 +93,24 @@ export default class RecepiListComponent extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: "center",
-        backgroundColor: '#ebeced',
+        backgroundColor: 'rgba(240, 240, 246, 1)'
     },
     recipeView: {
         flex: 1,
-        backgroundColor: '#677AC3',
         borderRadius: 5,
         margin:8,
         height: 180,
-        width:390,
-       // alignContent:'center',
+        width:'96%',
+        shadowColor: "#000",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        backgroundColor: 'rgba(52, 52, 52, 0.8)'
     },
     recipeCardImage: {
         width: '100%',
@@ -112,7 +122,7 @@ const styles = StyleSheet.create({
     recepieName: {
         color: 'white',
         fontWeight: 'bold',
-        fontStyle:'italic',
+        fontFamily:'TimesNewRomanPS-BoldMT',
         fontSize: 25,
         textShadowColor: 'grey',
         textShadowRadius: 5,
@@ -122,6 +132,17 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'normal',
         fontSize: 16,
+        fontFamily: 'TimesNewRomanPSMT',
         padding: 8
+    },
+    receipeNavigtionTitle: {
+        fontFamily:'TimesNewRomanPS-BoldMT',
+        color: 'black',
+        fontSize: 30,
+        padding: 8
+    },
+    receipeNavView: {
+        backgroundColor: 'rgba(240, 240, 246, 1)',
+        height: 60,
     }
 });
