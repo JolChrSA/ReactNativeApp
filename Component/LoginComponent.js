@@ -24,19 +24,20 @@ export default class LoginComponent extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <ImageBackground source={require("../assets/foodBg.jpeg")} style={{ width: '100%', height: '100%', resizeMode: 'cover' }}>
+          <ImageBackground source={require("../assets/newBg.jpeg")} style={{ width: '100%', height: '100%', resizeMode: 'cover' }}>
             <View style={styles.topView}>
-              <Image
+              {/* <Image
                 style={[{ width: 150, height: 150 }, styles.reactIcon]}
                 source={require('../assets/reactLogo.png')}
-              ></Image>
+              ></Image> */}
               <Text style={styles.logintText}>LOGIN </Text>
             </View>
             <View style={styles.middleView}>
               <TextInput
                 placeholder='Email'
                 keyboardType='email-address'
-                placeholderTextColor='white'
+                placeholderTextColor='black'
+                color='black'
                 value={this.state.email}
                 onChangeText={(email) => this.setState({ email })}
                 style={[styles.commonTextInput, styles.emailTextInput]}
@@ -45,7 +46,7 @@ export default class LoginComponent extends Component {
               <TextInput
                 placeholder='Password'
                 secureTextEntry={true}
-                placeholderTextColor='white'
+                placeholderTextColor='black'
                 fontWeight='bold'
                 value={this.state.password}
                 onChangeText={(password) => this.setState({ password })}
@@ -124,11 +125,11 @@ const styles = StyleSheet.create({
   commonTextInput: {
     width: '80%',
     height: 60,
-    borderWidth: 2,
-    borderColor: 'white',
+    borderWidth: 1,
+    borderColor: 'black',
     borderRadius: 10,
     padding: 20,
-    color: 'white'
+    //color: 'white'
   },
   emailTextInput: {
     bottom: 20
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   logintText: {
-    color: 'white',
+    color: 'black',
     fontSize: 30,
     paddingTop: 10,
     fontFamily: 'Verdana-Bold'

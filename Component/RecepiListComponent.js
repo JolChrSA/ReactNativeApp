@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList,RefreshControl,ActivityIndicator,ImageBackground } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, RefreshControl, ActivityIndicator, ImageBackground ,Image} from 'react-native'
 import Loder from './LoadingIndicator'
 
 export default class RecepiListComponent extends Component {
@@ -18,13 +18,11 @@ export default class RecepiListComponent extends Component {
     }
 
     onRefresh() {
-        this.setState({ isFetching: true }, function() { this.getRecepeList() });
-     }
+        this.setState({ isFetching: true }, function () { this.getRecepeList() });
+    }
 
     getRecepeList = () => {
-        this.setState({isLoading:true})
-        console.log('Joliph');
-        
+        this.setState({ isLoading: true })
         fetch('http://35.160.197.175:3006/api/v1/recipe/cooking-list',
             {
                 method: 'GET',
@@ -47,13 +45,17 @@ export default class RecepiListComponent extends Component {
             })
     }
 
-    addCardView =  ({ item , index})  => {
-        return(
-            <View style={styles.recipeView}> 
-                <ImageBackground source={this.getImageUrl(item.photo)} style={styles.recipeCardImage} imageStyle = {{borderRadius: 8}}>
-                     <Text style={styles.recepieMadebyName}> {item.firstName + ' ' + item.lastName}</Text>
-                     <Text style={styles.recepieName}>{item.name} </Text>
-                </ImageBackground>
+    addCardView = ({ item, index }) => {
+        return (
+            <View style={styles.recipeView}>
+                <View style={styles.recipeImageView}>
+                {/* <Image source={props.postImage ? {uri: props.postImage} : backgroundImage} style={styles.postImage} /> */}
+                <Image source= {this.getImageUrl(item.photo)} style={styles.recipeCardImage}/>
+                </View>
+                <View style={styles.textContentView}>
+                 <Text style={styles.recepieName}>{item.name} </Text>
+                <Text style={styles.recepieMadebyName}>Made by 👨🏻‍🍳 {item.firstName + ' ' + item.lastName}</Text>
+                </View>
             </View>
         )
     }
@@ -64,27 +66,27 @@ export default class RecepiListComponent extends Component {
         if (url == null) {
             return require('../assets/noData.jpg')
         } else {
-            return {uri: url}
+            return { uri: url }
         }
     }
 
     render() {
         return (
-            <View style={{ backgroundColor:'rgba(240, 240, 246, 1)'}}>
-                 <SafeAreaView>
-                 <View style= {styles.receipeNavView}>
-                 <Text style={styles.receipeNavigtionTitle}> Recepi List</Text>
-                </View>    
-                 {this.state.isLoading ? <ActivityIndicator color='black' size='large' style={{ backgroundColor:'rgba(240, 240, 246, 1)', width: '100%', height: '100%' }} /> :
-                <FlatList
-                     data={this.state.recipeInfoList}
-                     renderItem={this.addCardView}
-                     onRefresh={() => this.onRefresh()}
-                     refreshing={this.state.isFetching}
-                     keyExtractor={(item,index) => index}
-                     key = {(item,index) => index}
-                  />}
-               </SafeAreaView>
+            <View style={{ backgroundColor: 'rgba(240, 240, 246, 1)' }}>
+                <SafeAreaView>
+                    <View style={styles.receipeNavView}>
+                        <Text style={styles.receipeNavigtionTitle}> Recipe List</Text>
+                    </View>
+                    {this.state.isLoading ? <ActivityIndicator color='black' size='large' style={{ backgroundColor: 'rgba(240, 240, 246, 1)', width: '100%', height: '100%' }} /> :
+                        <FlatList
+                            data={this.state.recipeInfoList}
+                            renderItem={this.addCardView}
+                            onRefresh={() => this.onRefresh()}
+                            refreshing={this.state.isFetching}
+                            keyExtractor={(item, index) => index}
+                            key={(item, index) => index}
+                        />}
+                </SafeAreaView>
             </View>
         );
     }
@@ -95,48 +97,24 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgba(240, 240, 246, 1)'
     },
-    recipeView: {
-        flex: 1,
-        borderRadius: 5,
-        margin:8,
-        height: 180,
-        width:'96%',
-        shadowColor: "#000",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        backgroundColor: 'rgba(52, 52, 52, 0.8)'
-    },
-    recipeCardImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-        alignContent:'flex-end',
-        justifyContent:'flex-end'
-    },
     recepieName: {
-        color: 'white',
+        color: 'black',
         fontWeight: 'bold',
-        fontFamily:'TimesNewRomanPS-BoldMT',
+        fontFamily: 'TimesNewRomanPS-BoldMT',
         fontSize: 25,
-        textShadowColor: 'grey',
-        textShadowRadius: 5,
+        // textShadowColor: 'grey',
+        // textShadowRadius: 5,
         padding: 8
     },
     recepieMadebyName: {
-        color: 'white',
+        color: 'black',
         fontWeight: 'normal',
         fontSize: 16,
         fontFamily: 'TimesNewRomanPSMT',
         padding: 8
     },
     receipeNavigtionTitle: {
-        fontFamily:'TimesNewRomanPS-BoldMT',
+        fontFamily: 'TimesNewRomanPS-BoldMT',
         color: 'black',
         fontSize: 30,
         padding: 8
@@ -144,5 +122,36 @@ const styles = StyleSheet.create({
     receipeNavView: {
         backgroundColor: 'rgba(240, 240, 246, 1)',
         height: 60,
+    },
+    recipeView: {
+        flex: 1,
+        borderRadius: 5,
+        margin: 8,
+        height: 140,
+        width: '96%',
+        backgroundColor: 'white',// 'rgba(52, 52, 52, 0.8)'
+      // justifyContent: 'center',
+        padding: 10,
+        paddingLeft: 12,
+        flexDirection:'row'
+    },
+    recipeCardImage: {
+        width: '75%',
+        height: '72%',
+         resizeMode: 'cover',
+        justifyContent: 'center',
+        borderRadius:10
+    },
+    recipeImageView: {
+        height: 120,
+        width: 120,
+        backgroundColor: 'rgba(240, 240, 246, 1)',
+        borderRadius: 10,
+        justifyContent: 'center',
+        // alignContent:'center',
+        alignItems: 'center'
+    },
+    textContentView: {
+        flexDirection:'column'
     }
 });
