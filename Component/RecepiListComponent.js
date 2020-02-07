@@ -1,9 +1,37 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, RefreshControl, ActivityIndicator, ImageBackground ,Image} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, RefreshControl, ActivityIndicator, ImageBackground ,Image,Button} from 'react-native'
 import Loder from './LoadingIndicator'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 export default class RecepiListComponent extends Component {
-
+    
+    static navigationOptions =  ({ navigation })=> {
+        return {
+        title: 'Recipe List',
+        headerTitleAlign: 'center',
+        headerBackImage: null,
+        headerBackTitleVisible: false,
+        headerStyle: {
+            height: 100,
+            backgroundColor: 'rgba(240, 240, 246, 1)',
+          },
+          headerTintColor: 'black',
+          headerTitleStyle: {
+            fontFamily: 'TimesNewRomanPS-BoldMT',
+            fontSize: 30
+          },
+        headerRight: () => (
+            <Button
+              style= {styles.addButtonStyleNavigation}
+              onPress={() =>  navigation.navigate('AddRecepi')}
+              title="Add"
+              //color="black"
+            />
+          )
+        
+        }
+    }
+    
     constructor() {
         super()
         this.state = {
@@ -14,20 +42,34 @@ export default class RecepiListComponent extends Component {
     }
 
     componentDidMount() {
+         console.log(this.props.navigation.state['params']['token'])
         return this.getRecepeList()
     }
 
+    addRecepie = () => {
+       console.log("ddfdfd");
+       
+        this.props.navigation.navigate('RecepiDetail')
+    }
+
     onRefresh() {
-        this.setState({ isFetching: true }, function () { this.getRecepeList() });
+        this.setState({ isFetching: false }, function () { this.getRecepeList});
+    }
+    goToRecepieDetail(item) {
+        console.log('Selected Item :',item);
+        this.props.navigation.navigate('RecepiDetail', {
+            recepiInfo : JSON.stringify(item)
+        })
     }
 
     getRecepeList = () => {
         this.setState({ isLoading: true })
-        fetch('http://35.160.197.175:3006/api/v1/recipe/cooking-list',
+        const { navigate } = this.props.navigation;
+        fetch('http://35.160.197.175:3006/api/v1/recipe/feeds',
             {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + this.props.token
+                    'Authorization': 'Bearer ' + this.props.navigation.getParam('token') //'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s'/
                 }
             }).then((response) => { return response.json() })
             .then((responseJson) => {
@@ -47,6 +89,7 @@ export default class RecepiListComponent extends Component {
 
     addCardView = ({ item, index }) => {
         return (
+        <TouchableWithoutFeedback onPress= {() => this.goToRecepieDetail(item)}>
             <View style={styles.recipeView}>
                 <View style={styles.recipeImageView}>
                 {/* <Image source={props.postImage ? {uri: props.postImage} : backgroundImage} style={styles.postImage} /> */}
@@ -57,6 +100,7 @@ export default class RecepiListComponent extends Component {
                 <Text style={styles.recepieMadebyName}>Made by 👨🏻‍🍳 {item.firstName + ' ' + item.lastName}</Text>
                 </View>
             </View>
+            </TouchableWithoutFeedback> 
         )
     }
 
@@ -74,17 +118,21 @@ export default class RecepiListComponent extends Component {
         return (
             <View style={{ backgroundColor: 'rgba(240, 240, 246, 1)' }}>
                 <SafeAreaView>
-                    <View style={styles.receipeNavView}>
+                    {/* <View style={styles.receipeNavView}>
                         <Text style={styles.receipeNavigtionTitle}> Recipe List</Text>
-                    </View>
+                    </View> */}
                     {this.state.isLoading ? <ActivityIndicator color='black' size='large' style={{ backgroundColor: 'rgba(240, 240, 246, 1)', width: '100%', height: '100%' }} /> :
                         <FlatList
                             data={this.state.recipeInfoList}
                             renderItem={this.addCardView}
-                            onRefresh={() => this.onRefresh()}
-                            refreshing={this.state.isFetching}
                             keyExtractor={(item, index) => index}
                             key={(item, index) => index}
+                            refreshControl={
+                                <RefreshControl 
+                                onRefresh={() => this.onRefresh()}
+                                refreshing={this.state.isFetching}
+                                />
+                              }
                         />}
                 </SafeAreaView>
             </View>
@@ -102,8 +150,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'TimesNewRomanPS-BoldMT',
         fontSize: 25,
-        // textShadowColor: 'grey',
-        // textShadowRadius: 5,
         padding: 8
     },
     recepieMadebyName: {
@@ -130,7 +176,6 @@ const styles = StyleSheet.create({
         height: 140,
         width: '96%',
         backgroundColor: 'white',// 'rgba(52, 52, 52, 0.8)'
-      // justifyContent: 'center',
         padding: 10,
         paddingLeft: 12,
         flexDirection:'row'
@@ -148,10 +193,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(240, 240, 246, 1)',
         borderRadius: 10,
         justifyContent: 'center',
-        // alignContent:'center',
         alignItems: 'center'
     },
     textContentView: {
         flexDirection:'column'
+    },
+    addButtonStyleNavigation: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontFamily: 'TimesNewRomanPS-BoldMT',
+        fontSize: 25,
+        padding: 8
     }
 });

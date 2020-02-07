@@ -4,6 +4,12 @@ import RecepiListComponent from './RecepiListComponent'
 
 export default class LoginComponent extends Component {
 
+  static navigationOptions = {
+    title: '',
+    headers: null,
+    headerShown: false
+  }
+
   constructor() {
     super()
     this.state = {
@@ -14,92 +20,94 @@ export default class LoginComponent extends Component {
     }
   }
 
-  render() {
-    if (this.state.token != null) {
-      return (
-        //<View style={styles.container}>
-          <RecepiListComponent token={this.state.token} />
-        //</View>
-      )
+  onLogin = () => {
+    if (this.state.email != '') {
+      if (this.state.password != '') {
+        this.setState({ isLoading: true });
+        fetch('http://35.160.197.175:3006/api/v1/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'email': this.state.email,
+            'password': this.state.password
+          })
+        }).then((response) => {
+          return response.json()
+        }).then((responseJson) => {
+          this.setState({ isLoading: false });
+          if (responseJson.error == null) {
+            console.log(responseJson);
+            this.setState({ token: responseJson.token })
+            this.props.navigation.navigate('Recepi', { token: this.state.token })
+          } else {
+            Alert.alert('Error', responseJson.error)
+          }
+        }).catch((error) => {
+          this.setState({ isLoading: false });
+        })
+      } else {
+        Alert.alert('Error', 'Please enter Password')
+      }
     } else {
-      return (
-        <View style={styles.container}>
-          <ImageBackground source={require("../assets/newBg.jpeg")} style={{ width: '100%', height: '100%', resizeMode: 'cover' }}>
-            <View style={styles.topView}>
-              {/* <Image
-                style={[{ width: 150, height: 150 }, styles.reactIcon]}
-                source={require('../assets/reactLogo.png')}
-              ></Image> */}
-              <Text style={styles.logintText}>LOGIN </Text>
-            </View>
-            <View style={styles.middleView}>
-              <TextInput
-                placeholder='Email'
-                keyboardType='email-address'
-                placeholderTextColor='black'
-                color='black'
-                value={this.state.email}
-                onChangeText={(email) => this.setState({ email })}
-                style={[styles.commonTextInput, styles.emailTextInput]}
-              >
-              </TextInput>
-              <TextInput
-                placeholder='Password'
-                secureTextEntry={true}
-                placeholderTextColor='black'
-                fontWeight='bold'
-                value={this.state.password}
-                onChangeText={(password) => this.setState({ password })}
-                style={styles.commonTextInput}
-              >
-              </TextInput>
-            </View>
-            <View style={styles.bottomView}>
-              <TouchableOpacity style={styles.loginButton} onPress={this.onLogin}>
-                <Text style={styles.loginButtonText}>
-                  LOGIN
-                  </Text>
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-        </View>
-      );
+      Alert.alert('Error', 'Please enter Email')
     }
   }
 
-  onLogin = () => {
-    if (this.state.email != '') {
-        if (this.state.password != '') {
-            this.setState({ isLoading: true });
-            fetch('http://35.160.197.175:3006/api/v1/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'email': this.state.email,
-                    'password': this.state.password
-                })
-            }).then((response) => {
-                return response.json()
-            }).then((responseJson) => {
-                this.setState({ isLoading: false });
-                if (responseJson.error == null) {
-                    console.log(responseJson);
-                    this.setState({token:responseJson.token})
-                } else {
-                    Alert.alert('Error', responseJson.error)
-                }
-            }).catch((error) => {
-                this.setState({ isLoading: false });
-            })
-        } else {
-           Alert.alert('Error','Please enter Password')
-        }
-    } else {
-      Alert.alert('Error','Please enter Email')
-    }
-}
+  render() {
+    // if (this.state.token != null) {
+    //   return (
+    //     //<View style={styles.container}>
+    //       <RecepiListComponent token={this.state.token} />
+    //     //</View>
+    //   )
+    // } else {
+    return (
+      <View style={styles.container}>
+        <ImageBackground source={require("../assets/newBg.jpeg")} style={{ width: '100%', height: '100%', resizeMode: 'cover' }}>
+          <View style={styles.topView}>
+            {/* <Image
+                style={[{ width: 150, height: 150 }, styles.reactIcon]}
+                source={require('../assets/reactLogo.png')}
+              ></Image> */}
+            <Text style={styles.logintText}>LOGIN </Text>
+          </View>
+          <View style={styles.middleView}>
+            <TextInput
+              placeholder='Email'
+              keyboardType='email-address'
+              placeholderTextColor='black'
+              color='black'
+              value={this.state.email}
+              onChangeText={(email) => this.setState({ email })}
+              style={[styles.commonTextInput, styles.emailTextInput]}
+            >
+            </TextInput>
+            <TextInput
+              placeholder='Password'
+              secureTextEntry={true}
+              placeholderTextColor='black'
+              fontWeight='bold'
+              value={this.state.password}
+              onChangeText={(password) => this.setState({ password })}
+              style={styles.commonTextInput}
+            >
+            </TextInput>
+          </View>
+          <View style={styles.bottomView}>
+            <TouchableOpacity style={styles.loginButton} onPress={this.onLogin}>
+              <Text style={styles.loginButtonText}>
+                LOGIN
+                  </Text>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      </View>
+    );
+    // }
+  }
+
 }
 
 const styles = StyleSheet.create({
