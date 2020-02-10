@@ -28,14 +28,13 @@ export default class RecepiListComponent extends Component {
               //color="black"
             />
           )
-        
         }
     }
     
     constructor() {
         super()
         this.state = {
-            isLoading: false,
+            isLoading: true,
             recipeInfoList: [],
             isFetching: false,
         }
@@ -43,8 +42,17 @@ export default class RecepiListComponent extends Component {
 
     componentDidMount() {
          console.log(this.props.navigation.state['params']['token'])
-        return this.getRecepeList()
+          return this.getRecepeList()
     }
+
+    // componentDidUpdate(){
+    //     console.log('componentDidUpdate getting called')
+    //     return this.getRecepeList()
+    // }
+    
+    // componentWillMount(){
+    //     return this.getRecepeList()
+    // }
 
     addRecepie = () => {
        console.log("ddfdfd");
@@ -52,9 +60,12 @@ export default class RecepiListComponent extends Component {
         this.props.navigation.navigate('RecepiDetail')
     }
 
-    onRefresh() {
-        this.setState({ isFetching: false }, function () { this.getRecepeList});
+    onRefresh = () =>{
+        // this.setState({ isFetching: true })
+        // this.getRecepeList()
+        this.setState({ isFetching: true }, function() { this.getRecepeList() });
     }
+
     goToRecepieDetail(item) {
         console.log('Selected Item :',item);
         this.props.navigation.navigate('RecepiDetail', {
@@ -63,7 +74,7 @@ export default class RecepiListComponent extends Component {
     }
 
     getRecepeList = () => {
-        this.setState({ isLoading: true })
+      //  this.setState({ isLoading: true })
         const { navigate } = this.props.navigation;
         fetch('http://35.160.197.175:3006/api/v1/recipe/feeds',
             {
@@ -73,13 +84,13 @@ export default class RecepiListComponent extends Component {
                 }
             }).then((response) => { return response.json() })
             .then((responseJson) => {
-                this.setState({ isLoading: false })
+                this.setState({ isLoading: false, isFetching: false })
                 if (responseJson.error != null) {
                     Alert.error('ERROR', responseJson.error)
                 }
                 else {
                     console.log(responseJson);
-                    this.setState({ recipeInfoList: responseJson, isFetching: false })
+                    this.setState({ recipeInfoList: responseJson})
                 }
             }).catch((error) => {
                 this.setState({ isLoading: false })

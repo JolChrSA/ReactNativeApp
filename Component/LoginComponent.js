@@ -56,21 +56,11 @@ export default class LoginComponent extends Component {
   }
 
   render() {
-    // if (this.state.token != null) {
-    //   return (
-    //     //<View style={styles.container}>
-    //       <RecepiListComponent token={this.state.token} />
-    //     //</View>
-    //   )
-    // } else {
+  
     return (
       <View style={styles.container}>
         <ImageBackground source={require("../assets/newBg.jpeg")} style={{ width: '100%', height: '100%', resizeMode: 'cover' }}>
           <View style={styles.topView}>
-            {/* <Image
-                style={[{ width: 150, height: 150 }, styles.reactIcon]}
-                source={require('../assets/reactLogo.png')}
-              ></Image> */}
             <Text style={styles.logintText}>LOGIN </Text>
           </View>
           <View style={styles.middleView}>
@@ -137,7 +127,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 10,
     padding: 20,
-    //color: 'white'
   },
   emailTextInput: {
     bottom: 20

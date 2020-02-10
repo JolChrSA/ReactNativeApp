@@ -6,14 +6,11 @@ export default class RecepiDetailComponent extends Component {
 
     static navigationOptions = {
         title: 'Recepi Detail',
-        //headers: null,
-        //headerShown: false
       }
 
     componentDidMount() {
         console.log('component did mount getting called');
 //        console.log(this.props.navigation.state['params']['token'])
-
     //    console.log(JSON.parse(this.props.navigation.state['params']['recepiInfo']).name);      
           
     }
@@ -21,7 +18,6 @@ export default class RecepiDetailComponent extends Component {
     render() {
         let data = JSON.parse(this.props.navigation.state['params']['recepiInfo'])
         return (
-          //  <View></View>
             <View style={styles.container}>
                 <SafeAreaView style={{ flex: 1 }}>
                     <View style={[styles.topView, styles.shadowView]}>
