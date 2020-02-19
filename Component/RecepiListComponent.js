@@ -1,36 +1,36 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, RefreshControl, ActivityIndicator, ImageBackground ,Image,Button} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, RefreshControl, ActivityIndicator, ImageBackground, Image, Button } from 'react-native'
 import Loder from './LoadingIndicator'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 export default class RecepiListComponent extends Component {
-    
-    static navigationOptions =  ({ navigation })=> {
+
+    static navigationOptions = ({ navigation }) => {
         return {
-        title: 'Recipe List',
-        headerTitleAlign: 'center',
-        headerBackImage: null,
-        headerBackTitleVisible: false,
-        headerStyle: {
-            height: 100,
-            backgroundColor: 'rgba(240, 240, 246, 1)',
-          },
-          headerTintColor: 'black',
-          headerTitleStyle: {
-            fontFamily: 'TimesNewRomanPS-BoldMT',
-            fontSize: 30
-          },
-        headerRight: () => (
-            <Button
-              style= {styles.addButtonStyleNavigation}
-              onPress={() =>  navigation.navigate('AddRecepi')}
-              title="Add"
-              //color="black"
-            />
-          )
+            title: 'Recipe List',
+            headerTitleAlign: 'center',
+            headerBackImage: null,
+            headerBackTitleVisible: false,
+            headerStyle: {
+                height: 100,
+                backgroundColor: 'rgba(240, 240, 246, 1)',
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+                fontFamily: 'TimesNewRomanPS-BoldMT',
+                fontSize: 30
+            },
+            headerRight: () => (
+                <Button
+                    style={styles.addButtonStyleNavigation}
+                    onPress={() => navigation.navigate('AddRecepi')}
+                    title="Add"
+                //color="black"
+                />
+            )
         }
     }
-    
+
     constructor() {
         super()
         this.state = {
@@ -41,40 +41,40 @@ export default class RecepiListComponent extends Component {
     }
 
     componentDidMount() {
-         console.log(this.props.navigation.state['params']['token'])
-          return this.getRecepeList()
+        console.log(this.props.navigation.state['params']['token'])
+        return this.getRecepeList()
     }
 
     // componentDidUpdate(){
     //     console.log('componentDidUpdate getting called')
     //     return this.getRecepeList()
     // }
-    
+
     // componentWillMount(){
     //     return this.getRecepeList()
     // }
 
     addRecepie = () => {
-       console.log("ddfdfd");
-       
+        console.log("ddfdfd");
+
         this.props.navigation.navigate('RecepiDetail')
     }
 
-    onRefresh = () =>{
+    onRefresh = () => {
         // this.setState({ isFetching: true })
         // this.getRecepeList()
-        this.setState({ isFetching: true }, function() { this.getRecepeList() });
+        this.setState({ isFetching: true }, function () { this.getRecepeList() });
     }
 
     goToRecepieDetail(item) {
-        console.log('Selected Item :',item);
+        console.log('Selected Item :', item);
         this.props.navigation.navigate('RecepiDetail', {
-            recepiInfo : JSON.stringify(item)
+            recepiInfo: JSON.stringify(item)
         })
     }
 
     getRecepeList = () => {
-      //  this.setState({ isLoading: true })
+        //  this.setState({ isLoading: true })
         const { navigate } = this.props.navigation;
         fetch('http://35.160.197.175:3006/api/v1/recipe/feeds',
             {
@@ -90,7 +90,7 @@ export default class RecepiListComponent extends Component {
                 }
                 else {
                     console.log(responseJson);
-                    this.setState({ recipeInfoList: responseJson})
+                    this.setState({ recipeInfoList: responseJson })
                 }
             }).catch((error) => {
                 this.setState({ isLoading: false })
@@ -100,18 +100,18 @@ export default class RecepiListComponent extends Component {
 
     addCardView = ({ item, index }) => {
         return (
-        <TouchableWithoutFeedback onPress= {() => this.goToRecepieDetail(item)}>
-            <View style={styles.recipeView}>
-                <View style={styles.recipeImageView}>
-                {/* <Image source={props.postImage ? {uri: props.postImage} : backgroundImage} style={styles.postImage} /> */}
-                <Image source= {this.getImageUrl(item.photo)} style={styles.recipeCardImage}/>
+            <TouchableWithoutFeedback onPress={() => this.goToRecepieDetail(item)}>
+                <View style={styles.recipeView}>
+                    <View style={styles.recipeImageView}>
+                        {/* <Image source={props.postImage ? {uri: props.postImage} : backgroundImage} style={styles.postImage} /> */}
+                        <Image source={this.getImageUrl(item.photo)} style={styles.recipeCardImage} />
+                    </View>
+                    <View style={styles.textContentView}>
+                        <Text style={styles.recepieName}>{item.name} </Text>
+                        <Text style={styles.recepieMadebyName}>Made by 👨🏻‍🍳 {item.firstName + ' ' + item.lastName}</Text>
+                    </View>
                 </View>
-                <View style={styles.textContentView}>
-                 <Text style={styles.recepieName}>{item.name} </Text>
-                <Text style={styles.recepieMadebyName}>Made by 👨🏻‍🍳 {item.firstName + ' ' + item.lastName}</Text>
-                </View>
-            </View>
-            </TouchableWithoutFeedback> 
+            </TouchableWithoutFeedback>
         )
     }
 
@@ -127,11 +127,15 @@ export default class RecepiListComponent extends Component {
 
     render() {
         return (
-            <View style={{ backgroundColor: 'rgba(240, 240, 246, 1)' }}>
-                <SafeAreaView>
-                    {/* <View style={styles.receipeNavView}>
-                        <Text style={styles.receipeNavigtionTitle}> Recipe List</Text>
-                    </View> */}
+            <View style={{ backgroundColor: 'rgba(240, 240, 246, 1)', flex: 1 }}>
+                <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+                    <View style={{ flexDirection: "row", backgroundColor: "white", height: 64, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: 'rgba(231,231,232,1)' }}>
+                        <Text style={styles.navigationTtile}>Recipe List</Text>
+                            <Button style={styles.navigationButton}
+                                onPress={() => this.props.navigation.navigate('AddRecepi')}
+                                title="Add"
+                            />
+                    </View>
                     {this.state.isLoading ? <ActivityIndicator color='black' size='large' style={{ backgroundColor: 'rgba(240, 240, 246, 1)', width: '100%', height: '100%' }} /> :
                         <FlatList
                             data={this.state.recipeInfoList}
@@ -139,11 +143,11 @@ export default class RecepiListComponent extends Component {
                             keyExtractor={(item, index) => index}
                             key={(item, index) => index}
                             refreshControl={
-                                <RefreshControl 
-                                onRefresh={() => this.onRefresh()}
-                                refreshing={this.state.isFetching}
+                                <RefreshControl
+                                    onRefresh={() => this.onRefresh()}
+                                    refreshing={this.state.isFetching}
                                 />
-                              }
+                            }
                         />}
                 </SafeAreaView>
             </View>
@@ -189,14 +193,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',// 'rgba(52, 52, 52, 0.8)'
         padding: 10,
         paddingLeft: 12,
-        flexDirection:'row'
+        flexDirection: 'row'
     },
     recipeCardImage: {
         width: '75%',
         height: '72%',
-         resizeMode: 'cover',
+        resizeMode: 'cover',
         justifyContent: 'center',
-        borderRadius:10
+        borderRadius: 10
     },
     recipeImageView: {
         height: 120,
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textContentView: {
-        flexDirection:'column'
+        flexDirection: 'column'
     },
     addButtonStyleNavigation: {
         color: 'black',
@@ -215,5 +219,20 @@ const styles = StyleSheet.create({
         fontFamily: 'TimesNewRomanPS-BoldMT',
         fontSize: 25,
         padding: 8
+    },
+    navigationTtile: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontFamily: 'TimesNewRomanPS-BoldMT',
+        fontSize: 30,
+        textAlign: 'center',
+        paddingLeft: 50,
+        flex: 1,
+    },
+    navigationButton: {
+        color: 'blue',
+        fontFamily: 'TimesNewRomanPSMT',
+        fontSize: 18,
+        // backgroundColor: 'green'
     }
 });

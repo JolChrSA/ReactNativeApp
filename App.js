@@ -7,10 +7,49 @@ import AddRecepiComponent from './Component/AddRecepiComponent';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import { createTabNavigator, createBottomTabNavigator } from 'react-navigation-tabs';
+import SettingComponent from './Component/SettingComponent';
+import MapComponent from './Component/MapComponent';
+
+const tabbarNavigator = createBottomTabNavigator({
+ 
+  Recepi: {
+    screen: RecepiListComponent, navigationOptions: {
+    
+      tabBarIcon: ({ tintColor }) => (
+        <Image style={{ height: 20, width: 20, tintColor: tintColor }} source={require('./assets/cooking.png')}></Image>
+      ),
+      title: 'Recipe List',
+    }
+  },
+  Map: {
+    screen: MapComponent, navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Image style={{ height: 20, width: 20, tintColor: tintColor }} source={require('./assets/map.png')}></Image>
+      ),
+      title: 'Map',
+    }
+  },
+  Setting: {
+    screen: SettingComponent, navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Image style={{ height: 20, width: 20, tintColor: tintColor }} source={require('./assets/settings.png')}></Image>
+      ),
+      title: 'Setting',
+    }
+  },
+}, {
+  tabBarOptions: {
+    activeTintColor: 'black',
+  },
+  navigationOptions:{
+    headerShown: false
+  }
+})
 
 const detailNavigation = createStackNavigator(
   {
-    Recepi: { 'screen': RecepiListComponent },
+    tabbarNavigator,
     RecepiDetail: { 'screen': RecepiDetailComponent },
     AddRecepi: { 'screen' : AddRecepiComponent }
     // , navigationOptions: { ...TransitionPresets.ModalSlideFromBottomIOS } }
