@@ -5,11 +5,12 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import TagInput from 'react-native-tags-input';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-
+import Loder from './LoadingIndicator'
+import {connect} from 'react-redux';
 
 const mainColor = '#3ca897';
 
-export default class AddRecepiComponent extends Component {
+ class AddRecepiComponent extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -35,19 +36,22 @@ export default class AddRecepiComponent extends Component {
             radioBtnsData: ['Easy', 'Medium', 'Complex'],
             complexity: 'Easy',
             checked: 0,
-            isLoading: false,
             tags: {
                 tag: '',
                 tagsArray: []
             },
             tagsColor: mainColor,
             tagsText: '#fff',
-            image: null
+            image: null,
+            isLoading: false,
+            token: null
         }
     }
 
     componentDidMount() {
         this.getImagePermissions();
+        console.log("Joliph Add" , this.props.token);
+        
     }
 
     getImagePermissions = async () => {
@@ -108,6 +112,7 @@ export default class AddRecepiComponent extends Component {
     }
 
     addRecipe = () => {
+        this.setState({isLoading:true})
         console.log("started ----");
         const complexcity = this.state.radioBtnsData[this.state.checked]
         // this.checkComplexity()
@@ -119,7 +124,8 @@ export default class AddRecepiComponent extends Component {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s' // 'Bearer ' + this.props.navigation.getParam('token')
+                    //'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s' // 'Bearer ' + this.props.navigation.getParam('token')
+                    'Authorization' : 'Bearer ' + this.props.token
                 },
                 body: JSON.stringify({
                     'name': this.state.recipeName,
@@ -130,7 +136,7 @@ export default class AddRecepiComponent extends Component {
                 })
             }).then((response) => { return response.json() })
             .then((responseJson) => {
-                this.setState({ isLoading: false })
+               
                 if (responseJson.error != null) {
                     Alert.error('ERROR', responseJson.error)
                 }
@@ -140,7 +146,7 @@ export default class AddRecepiComponent extends Component {
                  //   this.props.navigation.goBack()
                 }
             }).catch((error) => {
-                this.setState({ isLoading: false })
+             
                 Alert.alert('ERROR', error)
             })
     }
@@ -164,6 +170,7 @@ export default class AddRecepiComponent extends Component {
             },
             body: formData
         }).then((responseJson) => {
+            this.setState({isLoading:false})
             Alert.alert('Success','Recipe added',[
                 {
                     text: 'Okay',
@@ -174,12 +181,14 @@ export default class AddRecepiComponent extends Component {
                 }
             ])
         }).catch((error) => {
+            this.setState({isLoading:false})
             Alert.alert('Upload Image Failed')
         })
     }
 
     render() {
         return (
+         
             <View style={styles.container}>
                 <SafeAreaView style={{ flex: 1 }}>
                     <View style={[styles.topView, styles.shadowView]}>
@@ -265,6 +274,7 @@ export default class AddRecepiComponent extends Component {
                         </TouchableOpacity>
                     </View>
                 </SafeAreaView>
+                <Loder isLoading={this.state.isLoading}></Loder>
             </View>
         )
     }
@@ -356,3 +366,8 @@ const styles = StyleSheet.create({
         color: mainColor
     },
 });
+
+const mapStateToProps = (state) => {
+    return{ token: state.token}
+}
+export default connect (mapStateToProps)(AddRecepiComponent)

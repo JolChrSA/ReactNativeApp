@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, Button, Alert, TextInput, TouchableOpacity, Image, ImageBackground } from 'react-native'
 import RecepiListComponent from './RecepiListComponent'
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-export default class LoginComponent extends Component {
+
+ class LoginComponent extends Component {
 
   static navigationOptions = {
     title: '',
@@ -39,8 +42,9 @@ export default class LoginComponent extends Component {
           this.setState({ isLoading: false });
           if (responseJson.error == null) {
             console.log(responseJson);
-            this.setState({ token: responseJson.token })
-            this.props.navigation.navigate('Recepi', { token: this.state.token })
+            this.props.token(responseJson.token)
+         //  this.setState({ token: responseJson.token })
+            this.props.navigation.navigate('Recepi')
           } else {
             Alert.alert('Error', responseJson.error)
           }
@@ -157,3 +161,20 @@ const styles = StyleSheet.create({
     color: 'white'
   }
 });
+
+function mapDispatchToProps(dispatch) {
+    return {
+        token: (value) => dispatch({
+            type: 'Token',
+            token: value
+        })
+    }
+}
+
+const mapStatetoProps = (state) =>{
+    return  {
+        token : state.token
+    }
+}
+
+export default connect(mapStatetoProps,mapDispatchToProps)(LoginComponent)

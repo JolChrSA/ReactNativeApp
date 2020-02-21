@@ -7,9 +7,11 @@ import AddRecepiComponent from './Component/AddRecepiComponent';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createTabNavigator, createBottomTabNavigator } from 'react-navigation-tabs';
+import {createBottomTabNavigator } from 'react-navigation-tabs';
 import SettingComponent from './Component/SettingComponent';
 import MapComponent from './Component/MapComponent';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
 
 const tabbarNavigator = createBottomTabNavigator({
  
@@ -67,10 +69,31 @@ const navigate = createSwitchNavigator({
 });
 
 
-const App = createAppContainer(navigate);
+const AppContainer = createAppContainer(navigate);
 
-export default App;
+const initalSate = {
+    token: ''
+}
+const reducer = (state=initalSate,action) => {
+    switch (action.type) {
+        case 'Token':
+          return {token : action.token};
+        default:
+          return {token : action.token};
+    }
+}
+const store = createStore(reducer)
 
+
+//export default App;
+
+export default function App() {
+  return (
+  <Provider store={store}>
+    <AppContainer/>
+  </Provider>
+    );
+}
 // export default createAppContainer(
 
   
@@ -85,10 +108,5 @@ export default App;
 //   )
 // )
 
-// export default function App() {
-//   return (
-//     <RecepiDetailComponent/>
-//     );
-// }
 
 

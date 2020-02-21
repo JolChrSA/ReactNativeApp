@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, RefreshControl, ActivityIndicator, ImageBackground, Image, Button } from 'react-native'
 import Loder from './LoadingIndicator'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { connect } from 'react-redux'
 
-export default class RecepiListComponent extends Component {
+
+ class RecepiListComponent extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -34,6 +36,7 @@ export default class RecepiListComponent extends Component {
     constructor() {
         super()
         this.state = {
+            token: null,
             isLoading: true,
             recipeInfoList: [],
             isFetching: false,
@@ -41,18 +44,12 @@ export default class RecepiListComponent extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.navigation.state['params']['token'])
-        return this.getRecepeList()
+       // console.log('Joliph Token',this.props.navigation.state['params']['token'])
+         this.getRecepeList(this.props.token)
+        this.setState({ token:this.props.token})
+
     }
 
-    // componentDidUpdate(){
-    //     console.log('componentDidUpdate getting called')
-    //     return this.getRecepeList()
-    // }
-
-    // componentWillMount(){
-    //     return this.getRecepeList()
-    // }
 
     addRecepie = () => {
         console.log("ddfdfd");
@@ -61,9 +58,8 @@ export default class RecepiListComponent extends Component {
     }
 
     onRefresh = () => {
-        // this.setState({ isFetching: true })
-        // this.getRecepeList()
-        this.setState({ isFetching: true }, function () { this.getRecepeList() });
+     
+        this.setState({ isFetching: true }, function () { this.getRecepeList(this.props.token) });
     }
 
     goToRecepieDetail(item) {
@@ -73,14 +69,15 @@ export default class RecepiListComponent extends Component {
         })
     }
 
-    getRecepeList = () => {
+    getRecepeList (token)  {
         //  this.setState({ isLoading: true })
         const { navigate } = this.props.navigation;
         fetch('http://35.160.197.175:3006/api/v1/recipe/feeds',
             {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + this.props.navigation.getParam('token') //'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s'/
+                   // 'Authorization':  'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s'// 'Bearer ' + this.props.navigation.getParam('token')
+                    'Authorization' : 'Bearer ' + token
                 }
             }).then((response) => { return response.json() })
             .then((responseJson) => {
@@ -236,3 +233,8 @@ const styles = StyleSheet.create({
         // backgroundColor: 'green'
     }
 });
+
+const mapStateToProps = (state) => {
+    return { token: state.token }
+}
+export default connect(mapStateToProps)(RecepiListComponent)

@@ -1,15 +1,24 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Text, Image } from 'react-native'
 import { SafeAreaView } from 'react-navigation';
+import {connect} from  'react-redux';
 
-export default class RecepiDetailComponent extends Component {
+class RecepiDetailComponent extends Component {
 
     static navigationOptions = {
         title: 'Recepi Detail',
       }
 
+      constructor() {
+          super()
+          this.state = {
+            token: null
+          }
+      }
     componentDidMount() {
         console.log('component did mount getting called');
+        console.log("Joliph ", this.props.token);
+        
 //        console.log(this.props.navigation.state['params']['token'])
     //    console.log(JSON.parse(this.props.navigation.state['params']['recepiInfo']).name);      
           
@@ -45,6 +54,7 @@ export default class RecepiDetailComponent extends Component {
         }
     }
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -97,3 +107,12 @@ const styles = StyleSheet.create({
         padding: 10
     },
 })
+
+
+const mapStateToProps = (state) => {
+    return{
+        token: state.token
+    }
+}
+
+export default connect(mapStateToProps)(RecepiDetailComponent)
