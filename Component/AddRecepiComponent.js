@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Dimensions, View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Button } from 'react-native'
 import { SafeAreaView } from 'react-navigation'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import TagInput from 'react-native-tags-input';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
@@ -44,7 +43,6 @@ const mainColor = '#3ca897';
             tagsText: '#fff',
             image: null,
             isLoading: false,
-            token: null
         }
     }
 
@@ -165,7 +163,7 @@ const mainColor = '#3ca897';
         fetch('http://35.160.197.175:3006/api/v1/recipe/add-update-recipe-photo',{
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s',
+                'Authorization': 'Bearer ' + this.props.token,//'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.MGBf-reNrHdQuwQzRDDNPMo5oWv4GlZKlDShFAAe16s',
                 'Content-Type' : 'application/json'
             },
             body: formData

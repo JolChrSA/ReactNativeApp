@@ -9,12 +9,12 @@ class RecepiDetailComponent extends Component {
         title: 'Recepi Detail',
       }
 
-      constructor() {
-          super()
-          this.state = {
-            token: null
-          }
-      }
+    //   constructor() {
+    //       super()
+    //       this.state = {
+    //         token: null
+    //       }
+    //   }
     componentDidMount() {
         console.log('component did mount getting called');
         console.log("Joliph ", this.props.token);

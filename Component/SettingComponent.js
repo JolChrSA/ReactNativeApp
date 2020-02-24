@@ -1,8 +1,13 @@
 import React,{ Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import {connect} from 'react-redux'
 
-export default class SettingComponent extends Component {
+class SettingComponent extends Component {
 
+  componentDidMount(){
+    console.log("Setting" , this.props.token);
+    
+  }
     render() {
   
         return (
@@ -20,3 +25,8 @@ const styles = StyleSheet.create({
       justifyContent: "center",
     }
 });
+
+const mapStateToProps = (state) => {
+  return { token: state.token}
+}
+export default connect(mapStateToProps)(SettingComponent)

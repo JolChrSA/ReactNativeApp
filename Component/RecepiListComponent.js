@@ -36,7 +36,7 @@ import { connect } from 'react-redux'
     constructor() {
         super()
         this.state = {
-            token: null,
+            //token: null,
             isLoading: true,
             recipeInfoList: [],
             isFetching: false,

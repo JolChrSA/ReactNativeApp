@@ -9,9 +9,11 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import {createBottomTabNavigator } from 'react-navigation-tabs';
 import SettingComponent from './Component/SettingComponent';
+import ProfileComponent from './Component/ProfileComponent';
 import MapComponent from './Component/MapComponent';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
+
 
 const tabbarNavigator = createBottomTabNavigator({
  
@@ -32,12 +34,12 @@ const tabbarNavigator = createBottomTabNavigator({
       title: 'Map',
     }
   },
-  Setting: {
-    screen: SettingComponent, navigationOptions: {
+  Profile: {
+    screen: ProfileComponent, navigationOptions: {
       tabBarIcon: ({ tintColor }) => (
         <Image style={{ height: 20, width: 20, tintColor: tintColor }} source={require('./assets/settings.png')}></Image>
       ),
-      title: 'Setting',
+      title: 'Profile',
     }
   },
 }, {
