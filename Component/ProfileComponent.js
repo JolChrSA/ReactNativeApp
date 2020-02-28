@@ -4,6 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 import * as Permissions from 'expo-permissions'
 import MapView, { Marker } from 'react-native-maps'
 import * as ImagePicker from 'expo-image-picker';
+import ActionSheet from 'react-native-actionsheet';
+
 
 export default class ProfileComponent extends Component {
 
@@ -11,11 +13,19 @@ export default class ProfileComponent extends Component {
         super(props)
         Permissions.askAsync(Permissions.LOCATION)
         navigator.geolocation.watchPosition(this.onSuccess, this.onError)
+        Permissions.askAsync(Permissions.CAMERA)
+        Permissions.askAsync(Permissions.CAMERA_ROLL)
+
         this.state = {
             image: null
         }
 
     }
+    showActionSheet = () => {
+        //To show the Bottom ActionSheet
+        this.ActionSheet.show();
+    };
+
     onSuccess = (position) => {
         console.log(position);
     }
@@ -35,6 +45,22 @@ export default class ProfileComponent extends Component {
         console.log('Marker Pressed');
     }
 
+    cameraImage = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1
+        })
+        console.log(result);
+
+        if (!result.cancelled) {
+            this.setState({ image: result.uri });
+        } else {
+            console.log('Image picker Cancelled')
+        }
+    }
+
     clickedOnImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -52,18 +78,48 @@ export default class ProfileComponent extends Component {
     }
 
     render() {
+        //Options to show in bottom action sheet. Option Array can be dynamic too
+        var optionArray = [
+            'Take a Photo',
+            'Choose from Gallery',
+            'Cancel',
+        ];
+
         return (
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                     <View style={styles.topView}>
+
+                        <ActionSheet
+                            ref={o => (this.ActionSheet = o)}
+                            //Title of the Bottom Sheet
+                            //   title={'Which one do you like ?'}
+                            //Options Array to show in bottom sheet
+                            options={optionArray}
+                            //Define cancel button index in the option array
+                            //this will take the cancel option in bottom and will highlight it
+                            cancelButtonIndex={2}
+                            //If you want to highlight any specific option you can use below prop
+                            //   destructiveButtonIndex={1}
+                            onPress={index => {
+                                //Clicking on the option will give you the index of the option clicked
+                                if (index == 0) {
+                                    this.cameraImage();
+                                } else if (index == 1) {
+                                    this.clickedOnImage();
+                                }else {}
+
+                            }}
+                        />
+
                         <Text style={styles.nameText}> Jay Mehta </Text>
-                        <TouchableOpacity 
-                            onPress={this.clickedOnImage} >
-                             {this.state.image ?
+                        <TouchableOpacity
+                            onPress={this.showActionSheet} >
+                            {this.state.image ?
                                 <Image source={{ uri: this.state.image }} style={styles.imageView} />
                                 :
                                 <Image source={require("../assets/user.png")} style={styles.imageView} />
-                            }   
+                            }
                             {/* <Image
                                 source={require('../assets/user.png')}
                                 style={styles.imageView}

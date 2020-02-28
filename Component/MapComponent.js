@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, Alert, Dimensions, SafeAreaView } from 'react-native';
 import * as Permissions from 'expo-permissions'
-import MapView, { Marker, Polyline, } from 'react-native-maps'
+import MapView, { Marker, Polyline,PROVIDER_GOOGLE } from 'react-native-maps'
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
@@ -13,10 +13,7 @@ export default class MapComponent extends Component {
         Permissions.askAsync(Permissions.LOCATION)
         navigator.geolocation.watchPosition(this.onSuccess, this.onError)
         this.state= {
-
             coords: null,
-          mapRegion: null,
-          loading: true
         }
     }
 
@@ -34,20 +31,18 @@ export default class MapComponent extends Component {
     }
     _watchLocation = async () => {
         await navigator.geolocation.watchPosition(position => {
-          this.setState({ coords: position.coords, loading: false });
+          this.setState({ coords: position.coords });
         });
       };
 
       _getLocation = async () => {
         await navigator.geolocation.getCurrentPosition(position => {
-          // this.setState({ coords: position.coords, loading: false });
           const region = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.012,
-            longitudeDelta: 0.012
+            latitudeDelta:  0.005,
+            longitudeDelta:  0.005
           };
-          this.map.animateToRegion(region, 500);
         });
       };
 
@@ -57,7 +52,7 @@ export default class MapComponent extends Component {
             <SafeAreaView>
               <View style={{ flex: 1 }}>
                 <MapView
-                //   provider={PROVIDER_GOOGLE}
+                  provider={PROVIDER_GOOGLE}
                   style={styles.map}
                   showsUserLocation={true}
                   followsUserLocation={true}
@@ -67,12 +62,14 @@ export default class MapComponent extends Component {
                   initialRegion={{
                     latitude: 23.029213,
                     longitude: 72.570387,
-                    latitudeDelta: 0.0009,
-                    longitudeDelta: 0.0009
+                    latitudeDelta: 0.0, // 0.0922
+                    longitudeDelta: 0.2 //0.0421
                   }}
                 >
                   <Marker
-                    coordinate={{ latitude: 23.029213, longitude: 72.570387 }}
+            
+                    coordinate={{  latitude: 23.025734,
+                      longitude: 72.503349 }}
                     title="Solution Analysts Pvt Ltd"
                     description="Solution Analysts Pvt Ltd, 101, Sankalp Iconic, Opp. Vikram Nagar, Ambli - Bopal Road, Iskcon Cross Road, Ahmedabad, Gujarat" 
                     onPress={() => {
@@ -83,21 +80,100 @@ export default class MapComponent extends Component {
     
                   <Polyline
                     coordinates={[
-                      { latitude: 23.029213, longitude: 72.570387 },
-                      // { latitude: 23.109144, longitude: 71.919733 },
-                      // { latitude: 23.015004, longitude: 71.41856 },
-                      // { latitude: 23.019386, longitude: 71.075313 },
-                      { latitude: 23.240952, longitude: 69.672179 },
-                      { latitude: 23.302622, longitude: 69.682503 }
+
+                      {
+                        latitude: 23.025734,
+                        longitude: 72.503349
+                    },
+                    {
+                        latitude: 23.025530,
+                        longitude: 72.505603
+                    },
+                    {
+                        latitude: 23.024113,
+                        longitude: 72.505498
+                    },
+                    {
+                        latitude: 23.023941,
+                        longitude: 72.506493
+                    },
+                    {
+                        latitude: 22.987242,
+                        longitude: 72.494659
+                    },
+                    {
+                        latitude: 22.987154, //6 
+                        longitude: 72.502040
+                    },
+                    {
+                        latitude: 22.987628,
+                        longitude: 72.503231
+                    },
+                    {
+                        latitude: 22.988289,
+                        longitude: 72.508788
+                    },
+                    {
+                        latitude: 22.989287,
+                        longitude: 72.513348
+                    },
+                    {
+                        latitude: 22.989731, //10 
+                        longitude: 72.514711
+                    },
+                    {
+                        latitude: 22.992625,
+                        longitude: 72.521921
+                    },
+                    {
+                        latitude: 22.993500,
+                        longitude: 72.525227
+                    },
+                    {
+                        latitude: 22.991233,
+                        longitude: 72.525443
+                    },
+                    {
+                        latitude: 22.990132,
+                        longitude: 72.525640
+                    },
+                    {
+                        latitude: 22.990130,
+                        longitude: 72.525181
+                    },
+                        
+                    //     { latitude: 23.036228, longitude: 72.503922 },
+                    //     {latitude: 23.020210 , longitude: 72.514050},
+                    //     {latitude: 23.035210, longitude: 72.537480},
+                    //     {latitude: 23.019990, longitude: 72.535430},
+                    //     { latitude: 23.008106, longitude: 72.494996},
+                    //     { latitude: 23.001635, longitude: 72.495365},
+                    //   // { latitude: 23.015004, longitude: 71.41856 },
+                    // //   // { latitude: 23.019386, longitude: 71.075313 },
+                    // //   { latitude: 23.240952, longitude: 69.672179 },
+                    // //   { latitude: 23.029213, longitude: 72.570387 },
+                    //   { latitude: 23.0664, longitude: 72.531528}
                     ]}
                     strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
                     strokeColors={[
                       "#7F0000",
-                      "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
-                      "#B24112",
+                      "#B24112", // no color, creates a "long" gradient between the previous and next coordinate
                       "#E5845C",
-                      "#238C23",
-                      "#7F0000"
+                      "#70b3ae",
+                      "#418fbc", // no color, creates a "long" gradient between the previous and next coordinate
+                      "#989377",
+                      "#7F0000",
+                      "#B24112", // no color, creates a "long" gradient between the previous and next coordinate
+                      "#E5845C",
+                      "#7F0000",
+                      "#B24112", // no color, creates a "long" gradient between the previous and next coordinate
+                      "#E5845C",
+                      "#7F0000",
+                      "#B24112", // no color, creates a "long" gradient between the previous and next coordinate
+                      
+                    
+                    //   "#238C23",
+                    //   "#7F0000"
                     ]}
                     strokeWidth={5}
                   />

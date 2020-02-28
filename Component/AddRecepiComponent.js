@@ -31,7 +31,7 @@ const mainColor = '#3ca897';
         this.state = {
             recipeName: '',
             preparationTime: '',
-            serves: 0,
+            serves: '',
             radioBtnsData: ['Easy', 'Medium', 'Complex'],
             complexity: 'Easy',
             checked: 0,

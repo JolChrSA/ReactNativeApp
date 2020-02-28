@@ -13,6 +13,8 @@ import ProfileComponent from './Component/ProfileComponent';
 import MapComponent from './Component/MapComponent';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
+import { connectActionSheet } from '@expo/react-native-action-sheet'
+
 
 
 const tabbarNavigator = createBottomTabNavigator({
@@ -37,7 +39,7 @@ const tabbarNavigator = createBottomTabNavigator({
   Profile: {
     screen: ProfileComponent, navigationOptions: {
       tabBarIcon: ({ tintColor }) => (
-        <Image style={{ height: 20, width: 20, tintColor: tintColor }} source={require('./assets/settings.png')}></Image>
+        <Image style={{ height: 20, width: 20, tintColor: tintColor }} source={require('./assets/userTabbar.png')}></Image>
       ),
       title: 'Profile',
     }
@@ -85,7 +87,7 @@ const reducer = (state=initalSate,action) => {
     }
 }
 const store = createStore(reducer)
-
+const ConnectedApp = connectActionSheet(App)
 
 //export default App;
 
